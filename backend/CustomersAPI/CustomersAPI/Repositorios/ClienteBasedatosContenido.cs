@@ -28,6 +28,23 @@ namespace CustomersAPI.Repositorios
             return await clientes.FirstOrDefaultAsync(c => c.Id == id);
         }
 
+        // ---- METODO PARA BORRAR CLIENTES ----
+        public async Task<bool> Borrar(long id)
+        {
+            // obtenemos la entidad que estamos intentando borrar
+            ClienteEntity entidad = await Obtener(id);
+
+            // borrar de la tabla clientes dicha entidad
+            clientes.Remove(entidad);
+
+            // guardamos los cambios hechos en la tabla clientes
+            SaveChanges();
+
+            // devolvemos true una vez que haya eliminado
+            return true;
+
+        }
+
         // ---- METODO PARA AGREGAR CLIENTES ----
         public async Task<ClienteEntity> Agregar(CrearClienteDto cliente)
         {
