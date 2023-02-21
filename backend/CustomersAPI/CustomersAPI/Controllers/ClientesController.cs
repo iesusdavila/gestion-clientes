@@ -1,6 +1,8 @@
 ﻿using CustomersAPI.Dtos;
+using CustomersAPI.Implementaciones;
 using CustomersAPI.Repositorios;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.IIS.Core;
 using MySqlX.XDevAPI;
 
 namespace CustomersAPI.Controllers
@@ -11,11 +13,15 @@ namespace CustomersAPI.Controllers
     {
         // la instancia _clienteBasedatosContenido solo se podra usar de lectura
         private readonly ClienteBasedatosContenido _clienteBasedatosContenido;
+        // la instancia _actualizarImplementacion solo se podra usar de lectura
+        private readonly InterfazActualizarImple _actualizarImplementacion;
+
 
         // constructor de la clase ClientesController
-        public ClientesController(ClienteBasedatosContenido clienteBasedatosContenido)
+        public ClientesController(ClienteBasedatosContenido clienteBasedatosContenido, InterfazActualizarImple actualizarImplementacion)
         {
             _clienteBasedatosContenido = clienteBasedatosContenido;
+            _actualizarImplementacion = actualizarImplementacion;
         }
 
         // ---- METODO GET CLIENTES ----
@@ -91,7 +97,15 @@ namespace CustomersAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ActualizarCliente(ClienteDto cliente)
         {
-            throw new NotImplementedException();
+            // llamamos a la implementacion de actualizar para poder actualizar un cliente
+            ClienteDto? result = await _actualizarImplementacion.Execute(cliente);
+            
+            // si no se encontro el cliente se devuelve un error
+            if(result == null)
+                return new NotFoundResult();
+
+            // creamos la ruta de los resultados
+            return new OkObjectResult(result);
         }
 
     }

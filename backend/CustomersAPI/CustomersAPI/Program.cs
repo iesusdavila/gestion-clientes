@@ -1,3 +1,4 @@
+using CustomersAPI.Implementaciones;
 using CustomersAPI.Repositorios;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,9 @@ builder.Services.AddDbContext<ClienteBasedatosContenido>(mysqlBuilder =>
     // conexion a la base de datos con buenas practicas
     mysqlBuilder.UseMySQL(builder.Configuration.GetConnectionString("ConnectionSQL"));
 });
+
+// implementamos la actualizacion y la interfaz
+builder.Services.AddScoped<InterfazActualizarImple, ActualizarImplementacion>();
 
 var app = builder.Build();
 

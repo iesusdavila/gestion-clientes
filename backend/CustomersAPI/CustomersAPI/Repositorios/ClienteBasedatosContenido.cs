@@ -22,7 +22,7 @@ namespace CustomersAPI.Repositorios
         // usaremos async - await porque son peticiones asincronas como JS
 
         // ---- METODO PARA OBTENER CLIENTES ----
-        public async Task<ClienteEntity> Obtener (long id)
+        public async Task<ClienteEntity?> Obtener (long id)
         {
             // se devuelve el primer cliente encontrado con dicha id
             return await clientes.FirstOrDefaultAsync(c => c.Id == id);
@@ -69,7 +69,20 @@ namespace CustomersAPI.Repositorios
 
             // usamos el metodo Obtener para devolver el cliente que hemos creado, en caso se error mandamos un mensaje
             return await Obtener(response.Entity.Id ?? throw new Exception("No se pudo guardar"));
-        }        
+        }
+
+        // ---- METODO PARA ACTUALIZAR CLIENTES ----
+        public async Task<bool> Actualizar(ClienteEntity cliente)
+        {
+            // actualizar el cliente de la tabla clientes
+            clientes.Update(cliente);
+
+            // actualizar la tabla de clientes
+            await SaveChangesAsync();
+
+            // devuelve true en caso que se haya actualizado
+            return true;
+        }
     }
 
 
